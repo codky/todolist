@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +37,13 @@ public class TodoController {
     	this.todoService.create(content);
     	
     	// 다시 원래 화면으로 리다이렉트
+    	return "redirect:/todo";
+    }
+    
+    
+    @DeleteMapping("/todo/delete/{id}")
+    public String todoDelete(@PathVariable("id") Integer id) {
+    	this.todoService.delete(id);
     	return "redirect:/todo";
     }
 }

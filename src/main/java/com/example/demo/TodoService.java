@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,5 +21,15 @@ public class TodoService {
 		todoEntity.setContent(content);
 		todoEntity.setCompleted(false);
 		this.todoRepository.save(todoEntity);
+	}
+
+	@Transactional
+	public void delete(Integer id) {
+		// TODO Auto-generated method stub
+		ToDoEntity todoEntity = todoRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. id =" + id));
+		
+		this.todoRepository.delete(todoEntity);
+		
 	}
 }
