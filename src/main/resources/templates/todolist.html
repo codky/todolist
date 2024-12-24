@@ -14,12 +14,13 @@
 	</style>
 
 	<div layout:fragment="content" class="container my-3">
-	<h1>Todo List</h1>
 			
+	<h3>Todolist☑️</h3>	
 	<form th:action="@{/todo/create}" method="post">
-	    <input name="content" placeholder="오늘의 할 일을 적어보세요!"/>
-	    <button>작성</button>
+	    <input name="content" placeholder="할 일을 적어보세요!"/>
+	    <button>등록</button>
 	</form>
+	<br>
 	
     <table class="table">
         <thead class="table-dark">
