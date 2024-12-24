@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,9 +23,9 @@ public class TodoController {
 	
 	
 	@RequestMapping("/todo")
-	public String list(Model model) {
-		List<ToDoEntity> toDoEntityList = this.todoService.getList();
-		model.addAttribute("toDoEntityList", toDoEntityList);
+	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+		Page<ToDoEntity> paging = this.todoService.getList(page);
+		model.addAttribute("paging", paging);
 		return "todoList";
 	}
 

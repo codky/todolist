@@ -2,6 +2,9 @@ package com.example.demo;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -12,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class TodoService {
 	private final TodoRepository todoRepository;
 	
-	public List<ToDoEntity> getList() {
-		return this.todoRepository.findAll();
+	public Page<ToDoEntity> getList(int page) {
+		Pageable pageable = PageRequest.of(page, 10);
+		
+		return this.todoRepository.findAll(pageable);
 	}
 	
 	public void create(String content) {
