@@ -1,11 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>To Do List</title>
 </head>
 <body>
     <h1>Todo</h1>
+	
+	<form th:action="@{/todo/create}" method="post">
+	    <input name="content" placeholder="오늘의 할 일을 적어보세요!"/>
+	    <button>작성</button>
+	</form>
+	
     <table>
         <thead>
         <tr>
