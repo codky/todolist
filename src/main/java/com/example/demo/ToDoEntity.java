@@ -29,6 +29,8 @@ public class ToDoEntity {
 	@Column(nullable = false)
 	private Boolean completed;
 	
+	private String memo;
+	
 	private LocalDate createDate;
 	
 	private LocalDate updateDate;

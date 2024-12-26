@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +34,6 @@ public class TodoController {
 	
 	private final TodoService todoService;
 	private final UserService userService;
-	
 	
 	@RequestMapping("/todo")
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
@@ -89,6 +89,36 @@ public class TodoController {
     	this.todoService.update(id, content, siteUser);
     	
 		return "redirect:/todo";
+    }
+    
+    @GetMapping(value = "/todo/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Integer id) {
     	
+    	ToDoEntity todoItem = this.todoService.getTodoItem(id);
+    	model.addAttribute("todoItem", todoItem);
+    	
+    	return "todo_detail";
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/todo/detail/memo/{id}")
+    public String memoUpdate(@RequestBody String memo, @PathVariable("id") Integer id, Principal principal) {
+    	
+    	SiteUser siteUser = this.userService.getUser(principal.getName());
+    	
+    	this.todoService.updateMemo(id, memo, siteUser);
+    	
+		return "redirect:/todo";
+    }
+    
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/todo/complete/{id}")
+    public String todoComplete(@PathVariable("id") Integer id, Principal principal) {
+    	
+    	ToDoEntity todoItem = this.todoService.getTodoItem(id);
+    	
+    	this.todoService.updateComplete(id);
+    	
+		return "redirect:/todo";
     }
 }

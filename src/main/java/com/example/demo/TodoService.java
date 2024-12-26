@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +53,41 @@ public class TodoService {
 		todoEntity.setContent(content);
 		
 		this.todoRepository.save(todoEntity);
+	}
+	
+	public ToDoEntity getTodoItem(Integer id) {
+		Optional<ToDoEntity> todoItem = this.todoRepository.findById(id);
+		if (todoItem.isPresent()) {
+			return todoItem.get();
+		} else {
+			throw new DataNotFoundException("TodoItem not found");
+		}
+	}
+	
+	@Transactional
+	public void updateMemo(Integer id, String memo, SiteUser author) {
+		// TODO Auto-generated method stub
+		ToDoEntity todoEntity = todoRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. id =" + id));
 		
+		todoEntity.setUpdateDate(LocalDate.now());
+		todoEntity.setMemo(memo);
+		
+		this.todoRepository.save(todoEntity);
+	}
+	
+	@Transactional
+	public void updateComplete(Integer id) {
+		// TODO Auto-generated method stub
+		ToDoEntity todoEntity = todoRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 아이템이 없습니다. id =" + id));
+		
+		Boolean completed = false;
+		completed = todoEntity.getCompleted() ? false : true;
+		
+		todoEntity.setUpdateDate(LocalDate.now());
+		todoEntity.setCompleted(completed);
+		
+		this.todoRepository.save(todoEntity);
 	}
 }
