@@ -35,7 +35,7 @@ public class TodoController {
 	private final TodoService todoService;
 	private final UserService userService;
 	
-	@RequestMapping("/todo")
+	@RequestMapping("/todo/list")
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
 		Page<ToDoEntity> paging = this.todoService.getList(page);
 		LocalDate date = LocalDate.now();
@@ -52,8 +52,17 @@ public class TodoController {
 	}
 
     @RequestMapping("/")
-    public String root(){
-        return "redirect:/todo";
+    public String root(Model model){
+        //return "redirect:/todo/list";
+		LocalDate date = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+		String formattedDateTime =  date.format(formatter);
+		
+		String dayOfWeekInKorea = date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN);
+		
+		model.addAttribute("formattedDateTime", formattedDateTime);
+		model.addAttribute("dayOfWeekInKorea", dayOfWeekInKorea);
+    	return "index";
     }
     
     @PreAuthorize("isAuthenticated()")
