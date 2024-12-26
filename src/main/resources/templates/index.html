@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <title>Hello, Todolist!</title>
+</head>
+<body>
+    <!-- 네이게이션바 -->
+    <nav th:replace="~{navbar :: navbarFragment}"></nav>
+    <div class="container my-3">
+        <style>
+            .modal {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: black;
+                top: 0;
+                left: 0;
+                display: none;
+            }
+			
+			.completed-task {
+			    text-decoration: line-through;
+			    color: gray;
+			}
+        </style>
+	</div>
+
+	<h3> 👌3초만에 회원가입하고, 오늘 할 일을 간편하게 관리해보세요! ☑️</h3> 
+	 
+
+<!-- Bootstrap JS -->
+<script th:src="@{/bootstrap.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</html>
