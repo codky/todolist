@@ -37,7 +37,7 @@
     <table class="table">
         <thead class="table-dark">
         <tr>
-			<th>ID</th>
+			<th>번호</th>
 			<th>완료</th>
             <th>할 일</th>
 			<th>등록일</th>
@@ -47,7 +47,8 @@
         </thead>
         <tbody>
         <tr th:each="todoentity, loop : ${paging}">
-            <td th:text="${todoentity.id}"></td>
+            <!--<td th:text="${todoentity.id}"></td>-->
+			<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
 			<td>
 				<!--<button id="complete-btn" th:onclick="completeItem([[${todoentity.id}]])">완료</button>-->
 				<div class="form-check form-switch">
@@ -62,6 +63,10 @@
 				<a th:href="@{|/todo/detail/${todoentity.id}|}" 
 				th:text="${todoentity.content}"
 				th:classappend="${todoentity.completed} ? 'completed-task' : ''"></a>
+				<span class="text-danger small ms-2"
+				      th:if="${todoentity.memo != null and #strings.length(todoentity.memo) > 0}"
+				      th:text="'memo'">
+				</span>
 			</td> 
 			<td th:text="${todoentity.createDate}"></td>
 			
@@ -126,7 +131,7 @@ function deleteItem(id){
         contentType:'application/json; charset=utf-8'
         }).done(function() {
         alert('할 일이 삭제되었습니다.');
-        window.location.href = '/';
+        window.location.href = '/todo/list';
         }).fail(function (error){
         alert(JSON.stringify(error));
     });
@@ -152,7 +157,7 @@ function reviseItem(){
         data: updateContent,
         }).done(function() {
         alert('할 일이 수정되었습니다.');
-        window.location.href = '/';
+        window.location.href = '/todo/list';
         }).fail(function (error){
         alert(JSON.stringify(error));
         });
@@ -171,7 +176,7 @@ function completeItem(id, isChecked) {
 	        contentType:'application/json; charset=utf-8'
 	    }).done(function() {
 	    	alert('할 일을 완료했습니다!');
-	        window.location.href = '/';
+	        window.location.href = '/todo/list';
 	    }).fail(function (error){
 	        alert(JSON.stringify(error));
         });	
@@ -182,7 +187,7 @@ function completeItem(id, isChecked) {
 		    contentType:'application/json; charset=utf-8'
 		}).done(function() {
 			alert('할 일의 완료를 취소했습니다.');
-		    window.location.href = '/';
+		    window.location.href = '/todo/list';
 		}).fail(function (error){
 		    alert(JSON.stringify(error));
 		});
