@@ -1,18 +1,21 @@
 package com.example.demo.user;
 
-import java.util.List;
-
-import com.example.demo.TodoEntity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 @Entity
@@ -30,6 +33,13 @@ public class SiteUser {
 	@Column(unique = true)
 	private String email;
 	
-	@OneToMany(mappedBy = "author")
-	private List<TodoEntity> todos;
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
+
+	// google, naver, kakao
+	private String provider;
+	
+	// 로그인 유저의 고유 ID
+	private String providerId;
+	
 }
