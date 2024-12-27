@@ -6,17 +6,33 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- 왼쪽 메뉴 -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-				    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">todolist</a>
-				</li>
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-					<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">작업</a>
                 </li>
 				<li class="nav-item">
-				    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
+				    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">오늘 할 일</a>
 				</li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">중요</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">예정</a>
+                </li>
+            </ul>
+
+            <!-- 오른쪽 메뉴 -->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                </li>
+				<!--
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
+                </li>
+				-->
             </ul>
         </div>
     </div>
