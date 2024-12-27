@@ -37,7 +37,7 @@
     <table class="table">
         <thead class="table-dark">
         <tr>
-			<th>ID</th>
+			<th>번호</th>
 			<th>완료</th>
             <th>할 일</th>
 			<th>등록일</th>
@@ -47,7 +47,8 @@
         </thead>
         <tbody>
         <tr th:each="todoentity, loop : ${paging}">
-            <td th:text="${todoentity.id}"></td>
+            <!--<td th:text="${todoentity.id}"></td>-->
+			<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
 			<td>
 				<!--<button id="complete-btn" th:onclick="completeItem([[${todoentity.id}]])">완료</button>-->
 				<div class="form-check form-switch">
