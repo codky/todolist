@@ -8,6 +8,48 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<!--
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function () {
+		    function initializeSortable() {
+		        jQuery("table > tbody").sortable({
+		            start: function (event, ui) {
+		                ui.item.addClass("selected");
+		            },
+		            stop: function (event, ui) {
+		                ui.item.removeClass("selected");
+		            },
+		            update: function (event, ui) {
+		                // 순서 변경 시 호출
+		                const updatedOrder = [];
+		                jQuery("table > tbody > tr").each(function (index, element) {
+		                    const id = jQuery(element).data("id"); // 각 행의 데이터 ID
+		                    updatedOrder.push({ id: id, orderIndex: index });
+		                });
+
+		                // 서버로 업데이트 요청
+		                $.ajax({
+		                    type: "POST",
+		                    url: "/todo/updateOrder", // 순서 업데이트 API
+		                    contentType: "application/json",
+		                    data: JSON.stringify(updatedOrder), // 변경된 순서 전송
+		                    success: function () {
+		                        console.log("순서가 업데이트되었습니다!");
+		                    },
+		                    error: function (error) {
+		                        console.error("순서 업데이트 중 오류 발생", error);
+		                    },
+		                });
+		            },
+		        });
+		    }
+
+		    initializeSortable();
+		});
+	</script>
+-->
     <title>Hello, Todolist!</title>
 </head>
 <body>
@@ -15,40 +57,43 @@
     <nav th:replace="~{navbar :: navbarFragment}"></nav>
     <div class="container my-3">
         <style>
-            .modal {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                background: black;
-                top: 0;
-                left: 0;
-                display: none;
-            }
-			
 			.completed-task {
 			    text-decoration: line-through;
 			    color: gray;
 			}
+			
         </style>
+		
 
-	<h3>오늘 할 일☑️</h3> 
-	<h3 th:text="|${formattedDateTime} ${dayOfWeekInKorea}|"></h3>	
+	<!--<h3>오늘 할 일☑️</h3>--> 
+	<h3 th:text="|${formattedDateTime} ${dayOfWeekInKorea}|"></h3>
+	<br>
+		
+	<form th:action="@{/todo/create}" method="post">
+	    <input name="content" placeholder="할 일을 추가해보세요!"/>
+	    <button class="btn btn-dark">등록</button>
+	</form>
+	<br>
 	 
-    <table class="table">
-        <thead class="table-dark">
+    <table class="table" id="sortable">
+        <thead class="table-light">
         <tr>
 			<th>번호</th>
 			<th>완료</th>
             <th>할 일</th>
 			<th>등록일</th>
-			<th>삭제/수정</th>
+			<th>수정/삭제</th>
+			<th>중요표시</th>
 
         </tr>
         </thead>
         <tbody>
         <tr th:each="todoentity, loop : ${paging}">
             <!--<td th:text="${todoentity.id}"></td>-->
+			<!-- 번호 -->
 			<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+			<!-- 번호 끝 -->
+			<!-- 완료 스위치 -->
 			<td>
 				<!--<button id="complete-btn" th:onclick="completeItem([[${todoentity.id}]])">완료</button>-->
 				<div class="form-check form-switch">
@@ -59,6 +104,8 @@
 				</div>
 				
 			</td>
+			<!-- 완료 스위치 끝 -->
+			<!-- 할 일 -->
             <td>
 				<a th:href="@{|/todo/detail/${todoentity.id}|}" 
 				th:text="${todoentity.content}"
@@ -68,20 +115,53 @@
 				      th:text="'memo'">
 				</span>
 			</td> 
+			<!-- 할 일 끝 -->
+			<!-- 등록일 -->
 			<td th:text="${todoentity.createDate}"></td>
+			<!-- 등록일 끝 -->
 			
 			<td>
-				<button id="delete-btn" th:onclick="deleteItem([[${todoentity.id}]])">삭제</button>
-				<button id="reviseBtn" th:onclick="openModal([[${todoentity.id}]])">수정</button>
+				<!-- 수정 버튼 -->
+				<button type="button" class="btn btn-dark" 
+				        data-bs-toggle="modal" 
+				        data-bs-target="#reviseModal" 
+				        th:onclick="openModal([[${todoentity.id}]])">
+				    수정
+				</button>
+				<!-- 수정 버튼 끝 -->
+				
+				<!-- 수정 모달 -->
+				<div class="modal fade" id="reviseModal" tabindex="-1" aria-labelledby="reviseModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="reviseModalLabel">할 일 수정</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <input id="reviseInput" class="form-control" placeholder="수정할 내용을 입력하세요" />
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				        <button type="button" class="btn btn-primary" onclick="reviseItem()">수정 완료</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 수정 모달 끝 -->
+				<button id="delete-btn" class="btn btn-dark" th:onclick="deleteItem([[${todoentity.id}]])">삭제</button>
+			</td>
+			<td>
+			    <button id="prior-btn" class="btn btn-light" 
+			            th:onclick="togglePriority([[${todoentity.id}]])"
+			            th:classappend="${todoentity.priority} ? 'btn-danger' : 'btn-light'">
+			        <span th:text="${todoentity.priority} ? '⭐' : ' '"></span>
+					<!--<span th:text="${todoentity.priority} ? '📌' : ''"></span>-->
+			    </button>
 			</td>
         </tr>
         </tbody>
     </table>
-	
-	<form th:action="@{/todo/create}" method="post">
-	    <input name="content" placeholder="할 일을 추가해보세요!"/>
-	    <button>등록</button>
-	</form>
 	
 	<!-- 페이징처리 시작 -->
     <div th:if="${!paging.isEmpty()}">
@@ -107,12 +187,14 @@
     </div>
     <!-- 페이징처리 끝 -->
 	</div>
+	<!--
 	<div class="modal">
 	    <div class="modal_content">
 	        <input id="revise" placeholder="내용을 수정해주세요"/>
 	        <button type="submit" id="completeBtn" onclick="reviseItem()">완료</button>
 	    </div>
 	</div>
+	-->
 	
 
 <!-- Bootstrap JS -->
@@ -123,46 +205,56 @@
 let value = "";
 
 function deleteItem(id){
-    console.log(id)
-    const url = "/todo/delete/"+id
-    $.ajax({
-        type:'delete',
-        url:url,
-        contentType:'application/json; charset=utf-8'
-        }).done(function() {
-        alert('할 일이 삭제되었습니다.');
-        window.location.href = '/todo/list';
-        }).fail(function (error){
-        alert(JSON.stringify(error));
-    });
+	if(confirm('정말 삭제하시겠습니까?')) {
+		console.log(id)
+		    const url = "/todo/delete/"+id
+		    $.ajax({
+		        type:'delete',
+		        url:url,
+		        contentType:'application/json; charset=utf-8'
+		        }).done(function() {
+		        //alert('할 일이 삭제되었습니다.');
+		        window.location.href = '/todo/list';
+		        }).fail(function (error){
+		        alert(JSON.stringify(error));
+		    });
+	} else {
+		//  삭제 취소
+		console.log('삭제 취소');
+	}
+    
 }
 
-function openModal(id){
-    value = id
-    $(".modal").fadeIn();
+
+function openModal(id) {
+    value = id; // 수정할 항목 ID 저장
+    const currentContent = document.querySelector(`a[th:href='|/todo/detail/${id}|']`).textContent; // 현재 내용 가져오기
+    document.getElementById("reviseInput").value = currentContent; // 모달의 input에 현재 내용 표시
 }
 
-function reviseItem(){
+function reviseItem() {
+    const id = value; // 저장된 ID 가져오기
+    const updateContent = document.getElementById("reviseInput").value; // 입력한 수정 내용 가져오기
 
-    var id = value;
-    console.log(id)
-    var contentWritten = document.getElementById("complete").value;
-    var updateContent = contentWritten;
-    console.log(updateContent)
-    const url = "/todo/update/"+id;
-     $.ajax({
-        type:'put',
-        url:url,
-        contentType:'application/json; charset=utf-8',
-        data: updateContent,
+    if (confirm('정말 수정하시겠습니까?')) {
+        const url = "/todo/update/" + id;
+        $.ajax({
+            type: 'put',
+            url: url,
+            contentType: 'application/json; charset=utf-8',
+            data: updateContent,
         }).done(function() {
-        alert('할 일이 수정되었습니다.');
-        window.location.href = '/todo/list';
-        }).fail(function (error){
-        alert(JSON.stringify(error));
+            //alert('할 일이 수정되었습니다.');
+            window.location.href = '/todo/list';
+        }).fail(function(error) {
+            alert(JSON.stringify(error));
         });
 
-     $(".modal").fadeOut();
+        // 모달 닫기
+        $('#reviseModal').modal('hide');
+    } else {
+        console.log('수정 취소');
+    }
 }
 
 function completeItem(id, isChecked) {
@@ -175,7 +267,7 @@ function completeItem(id, isChecked) {
 	        url:url,
 	        contentType:'application/json; charset=utf-8'
 	    }).done(function() {
-	    	alert('할 일을 완료했습니다!');
+	    	//alert('할 일을 완료했습니다!');
 	        window.location.href = '/todo/list';
 	    }).fail(function (error){
 	        alert(JSON.stringify(error));
@@ -186,7 +278,7 @@ function completeItem(id, isChecked) {
 		    url:url,
 		    contentType:'application/json; charset=utf-8'
 		}).done(function() {
-			alert('할 일의 완료를 취소했습니다.');
+			//alert('할 일의 완료를 취소했습니다.');
 		    window.location.href = '/todo/list';
 		}).fail(function (error){
 		    alert(JSON.stringify(error));
@@ -194,6 +286,20 @@ function completeItem(id, isChecked) {
 		
 	}
      
+}
+
+function togglePriority(id) {
+    const url = `/todo/priority/${id}`;
+    $.ajax({
+        type: 'put',
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+    }).done(function() {
+        // 요청 성공 시 페이지 새로고침
+        window.location.reload();
+    }).fail(function(error) {
+        alert(JSON.stringify(error));
+    });
 }
 
 </script>
