@@ -75,7 +75,7 @@ public class TodoController {
     	this.todoService.create(content, siteUser);
     	
     	// 다시 원래 화면으로 리다이렉트
-    	return "redirect:/todo";
+    	return "redirect:/todo/list";
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -86,7 +86,7 @@ public class TodoController {
     	
     	this.todoService.delete(id, siteUser);
     	
-    	return "redirect:/todo";
+    	return "redirect:/todo/list";
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -97,7 +97,7 @@ public class TodoController {
     	
     	this.todoService.update(id, content, siteUser);
     	
-		return "redirect:/todo";
+    	return "redirect:/todo/list";
     }
     
     @GetMapping(value = "/todo/detail/{id}")
@@ -117,7 +117,7 @@ public class TodoController {
     	
     	this.todoService.updateMemo(id, memo, siteUser);
     	
-		return "redirect:/todo";
+    	return "redirect:/todo/list";
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -128,6 +128,6 @@ public class TodoController {
     	
     	this.todoService.updateComplete(id);
     	
-		return "redirect:/todo";
+    	return "redirect:/todo/list";
     }
 }
