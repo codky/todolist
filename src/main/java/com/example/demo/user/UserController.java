@@ -34,7 +34,7 @@ public class UserController {
 		}
 		
 		try {
-			userService.create(userCreateForm.getUsername(), userCreateForm.getEmail(), userCreateForm.getPassword1());	
+			userService.create(userCreateForm.getLoginId(), userCreateForm.getNickname(), userCreateForm.getEmail(), userCreateForm.getPassword1());	
 		} catch(DataIntegrityViolationException e) {
 			e.printStackTrace();
 			bindingResult.reject("singupFailed", "이미 등록된 사용자 입니다.");

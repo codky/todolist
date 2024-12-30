@@ -28,6 +28,8 @@ public class SecurityConfig {
 				.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 			.formLogin(formLogin -> formLogin // 로그인 설정
 					.loginPage("/user/login") // 로그인 페이지 URL
+					.usernameParameter("loginId") // username 대신 loginId 사용
+					.passwordParameter("password")
 					.defaultSuccessUrl("/todo/list")) // 로그인 성공 시 이동할 페이지는 루트 URL
 			.logout((logout) -> logout
 					.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
