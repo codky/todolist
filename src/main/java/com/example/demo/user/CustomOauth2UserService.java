@@ -61,6 +61,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         			.providerId(oAuth2UserInfo.getProviderId())
         			.role(UserRole.USER)
         			.build();
+        	
+        	user = userRepository.save(user);
         }
 
         return new CustomUserDetails(user, oAuth2User.getAttributes());
