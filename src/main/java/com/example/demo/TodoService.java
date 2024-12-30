@@ -24,7 +24,7 @@ public class TodoService {
 	
 	public Page<TodoEntity> getList(SiteUser author, int page) {
 	    System.out.println("Author ID: " + author.getId());
-	    System.out.println("Author Username: " + author.getUsername());
+	    System.out.println("Author Username: " + author.getLoginId());
 	    Pageable pageable = PageRequest.of(page, 10);
 	    Page<TodoEntity> result = this.todoRepository.findByAuthor(author, pageable);
 	    System.out.println("Result Size: " + result.getContent().size());

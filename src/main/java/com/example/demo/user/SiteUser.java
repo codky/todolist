@@ -23,10 +23,13 @@ public class SiteUser {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long id; // Primary Key
 	
 	@Column(unique = true)
-	private String username;
+	private String loginId; // 로그인 식별자 (google_xxx, naver_xxx)
+	
+	@Column
+	private String nickname;
 	
 	private String password;
 	
@@ -36,10 +39,8 @@ public class SiteUser {
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 
-	// google, naver, kakao
-	private String provider;
+	private String provider; // 소셜 로그인 제공자 (google, naver, kakao)
 	
-	// 로그인 유저의 고유 ID
-	private String providerId;
+	private String providerId; // 로그인 유저의 고유 ID
 	
 }

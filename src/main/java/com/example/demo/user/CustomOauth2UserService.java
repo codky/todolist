@@ -27,43 +27,42 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
 
-        OAuth2UserInfo oAuth2UserInfo = null;
+        OAuth2UserInfo oAuth2UserInfo = switch (provider) {
+	        case "google" -> new GoogleUserDetails(oAuth2User.getAttributes());
+	        
+	        // 추가적으로 네이버, 카카오 로그인 처리 가능
+	        default -> throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
+        };
 
-        // 뒤에 진행할 다른 소셜 서비스 로그인을 위해 구분 => 구글
-        if(provider.equals("google")){
-        	System.out.println("구글 로그인");
-            oAuth2UserInfo = new GoogleUserDetails(oAuth2User.getAttributes());
-
-        }
-
-        String providerId = oAuth2UserInfo.getProviderId();
         String email = oAuth2UserInfo.getEmail();
-        String loginId = provider + "_" + providerId;
-        System.out.println("Generated loginId: " + loginId); // loginId 디버깅
-        String name = oAuth2UserInfo.getName();
+        String loginId = provider + "_" + oAuth2UserInfo.getProviderId();
+
 
         // 기존 사용자 검색
-        Optional<SiteUser> findMember = userRepository.findByusername(loginId);
-        System.out.println("Find Member: " + findMember.isPresent()); // 사용자 조회 결과 디버깅
-        SiteUser member;
+        Optional<SiteUser> findUser = userRepository.findByEmail(oAuth2UserInfo.getEmail()); // 이메일 기반으로 중복 사용자 처리
+        System.out.println("Find User: " + findUser.isPresent()); // 사용자 조회 결과 디버깅
+        SiteUser user;
 
-        if (findMember.isEmpty()) {
-            member = SiteUser.builder()
-                .username(loginId) // 고유 ID
-                .email(email)
-                .provider(provider)
-                .providerId(providerId)
-                .role(UserRole.USER)
-                .build();
-            userRepository.save(member);
+        if (findUser.isPresent()) {
+        	user = findUser.get();
+        	// 기존 사용자의 provider/provderId를 업데이트 (새로운 소셜 플랫폼 연결)
+        	if(!user.getProvider().equals(provider)) {
+        		user.setProvider(provider);
+        		user.setProviderId(oAuth2UserInfo.getProviderId());
+        		userRepository.save(user);
+        	}
         } else {
-            // 이미 존재하는 사용자
-            member = findMember.get();
+        	// 새로운 사용자 생성
+        	user = SiteUser.builder()
+        			.loginId(loginId)
+        			.nickname(oAuth2UserInfo.getName())
+        			.email(email)
+        			.provider(provider)
+        			.providerId(oAuth2UserInfo.getProviderId())
+        			.role(UserRole.USER)
+        			.build();
         }
 
-        return new CustomOauth2UserDetails(member, oAuth2User.getAttributes());
+        return new CustomUserDetails(user, oAuth2User.getAttributes());
     }
-	
-	
-
 }
