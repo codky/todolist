@@ -19,24 +19,23 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "to_do_entity") // 정확한 테이블 이름 사용
+@Table(name = "todo_entity") // 정확한 테이블 이름 사용
 public class TodoEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Integer id; // Primary Key
 	
 	@Column(length=200)
-	private String content;
+	private String content; // todo 내용
 	
 	@Column(nullable = false)
-	private Boolean completed;
+	private Boolean completed; // 완료 여부
 	
-	private String memo;
+	private String memo; // 메모
 	
-	private LocalDate createDate;
-	
-	private LocalDate updateDate;
+	private LocalDate createDate; // 생성일
+	private LocalDate updateDate; // 수정일
 	
 	@Column(nullable = false) // order_index는 NOT NULL이므로 기본값 필요
     private Integer orderIndex = 0; // 기본값 0 설정
