@@ -30,6 +30,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = switch (provider) {
 	        case "google" -> new GoogleUserDetails(oAuth2User.getAttributes());
 	        
+	        case "naver" -> new NaverUserDetails(oAuth2User.getAttributes());
+	        
 	        // 추가적으로 네이버, 카카오 로그인 처리 가능
 	        default -> throw new OAuth2AuthenticationException("지원하지 않는 소셜 로그인입니다");
         };
