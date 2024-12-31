@@ -1,11 +1,14 @@
+# General Files
 HELP.md
+
+# Gradle
 .gradle
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### STS ###
+# Gradle Wrapper
+!gradle/wrapper/gradle-wrapper.jar
+
+# Eclipse/STS
 .apt_generated
 .classpath
 .factorypath
@@ -14,24 +17,46 @@ build/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
 
-### IntelliJ IDEA ###
+# IntelliJ IDEA
 .idea
 *.iws
 *.iml
 *.ipr
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
+# VS Code
 .vscode/
+
+# OS Files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+.DS_Store
+.AppleDouble
+.LSOverride
+.directory
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Package Files
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Properties Files
+application.properties
+!application.properties.example
