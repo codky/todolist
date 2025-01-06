@@ -19,7 +19,7 @@ public class Answer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(length = 4000) // 최대 4000자로 제한
     private String content;
 
     private LocalDateTime createDate; 

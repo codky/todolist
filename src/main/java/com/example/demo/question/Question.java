@@ -24,7 +24,7 @@ public class Question {
 	@Column(length = 200)
 	private String subject; // 제목
 	
-	@Column(columnDefinition = "CLOB")
+	@Column(length = 4000) // 최대 4000자로 제한
 	private String content; // 내용
 	
 	private LocalDateTime createDate;
