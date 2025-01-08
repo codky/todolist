@@ -1,4 +1,4 @@
-package com.example.demo.question;
+package com.example.demo.answer;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
