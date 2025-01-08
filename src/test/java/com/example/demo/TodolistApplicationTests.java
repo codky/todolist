@@ -1,7 +1,9 @@
 package com.example.demo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.foreign.Linker.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.demo.question.Answer;
+import com.example.demo.question.AnswerRepository;
 import com.example.demo.question.Question;
 import com.example.demo.question.QuestionRepository;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 class TodolistApplicationTests {
@@ -22,6 +28,9 @@ class TodolistApplicationTests {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
+	
+	@Autowired
+	private AnswerRepository answerRepository;
 	
 	@Test
 	@Disabled
@@ -65,6 +74,7 @@ class TodolistApplicationTests {
     }
     
     @Test
+    @Disabled
     void testJpa3() {        
         List<Question> all = this.questionRepository.findAll();
         assertEquals(2, all.size());
@@ -74,6 +84,7 @@ class TodolistApplicationTests {
     }
     
     @Test
+    @Disabled
     void testJpa4() {
     	Optional<Question> oq = this.questionRepository.findById(2);
     	if(oq.isPresent()) {
@@ -83,22 +94,81 @@ class TodolistApplicationTests {
     }
     
     @Test
+    @Disabled
     void testJpa5() {
     	Question q = this.questionRepository.findBySubject("개발실력 어떻게 늘리나요?");
     	assertEquals(1, q.getId());
     }
     
     @Test
+    @Disabled
     void testSubecjtAndContent() {
     	Question q = this.questionRepository.findBySubjectAndContent("개발실력 어떻게 늘리나요?", "조언을 듣고 싶습니다.");
     	assertEquals(1, q.getId());
     }
     
     @Test
+    @Disabled
     void testSubjectLike() {
     	 List<Question> qList = this.questionRepository.findBySubjectLike("%개발%");
     	 Question q = qList.get(0);
          assertEquals("개발실력 어떻게 늘리나요?", q.getSubject());
+    }
+    
+    @Test
+    @Disabled
+    void testUpdate() {
+    	Optional<Question> oq = this.questionRepository.findById(1);
+    	assertTrue(oq.isPresent());
+    	Question q = oq.get();
+    	q.setSubject("수정된 제목");
+    	this.questionRepository.save(q);
+    }
+    
+    @Test
+    @Disabled
+    void testDelete() {
+    	assertEquals(2, this.questionRepository.count());
+    	Optional<Question> oq = this.questionRepository.findById(1);
+    	assertTrue(oq.isPresent());
+    	Question q = oq.get();
+    	this.questionRepository.delete(q);
+    	assertEquals(1, this.questionRepository.count());
+    }
+    
+    @Test
+    @Disabled
+    void createAnswer() {
+    	Optional<Question> oq = this.questionRepository.findById(6);
+    	assertTrue(oq.isPresent());
+    	Question q = oq.get();
+    	
+    	Answer a = new Answer();
+    	a.setContent("네 자동으로 생성됩니다.");
+    	a.setQuestion(q); // 어떤 질문의 답변인지 알기 위해서 Question 객체 필요.
+    	a.setCreateDate(LocalDateTime.now());
+    	this.answerRepository.save(a);
+    }
+    
+    @Test
+    @Disabled
+    void selectAnswer() {
+    	Optional<Answer> oa = this.answerRepository.findById(1);
+    	assertTrue(oa.isPresent());
+    	Answer a = oa.get();
+    	assertEquals(6, a.getQuestion().getId());
+    }
+    
+    @Transactional
+    @Test
+    void checkQeustion() {
+    	Optional<Question> oq = this.questionRepository.findById(6);
+    	assertTrue(oq.isPresent());
+    	Question q = oq.get();
+    	
+    	List<Answer> answerList = q.getAnswerList();
+    	assertEquals(1, answerList.size());
+    	assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
     }
 
 }
