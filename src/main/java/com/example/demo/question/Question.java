@@ -31,11 +31,12 @@ public class Question {
 	
 	private LocalDateTime createDate;
 	
+	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) 
+    private List<Answer> answerList; 
 	// Answer 객체들로 구성된 answerList를 Question 엔티티의 속성으로 추가하고 @OneToMany 애너테이션을 설정했다. 
 	// 이제 질문에서 답변을 참조하려면 question.getAnswerList()를 호출하면 된다. 
 	// @OneToMany 애너테이션에 사용된 mappedBy는 참조 엔티티의 속성명을 정의한다. 
 	// 즉, Answer 엔티티에서 Question 엔티티를 참조한 속성인 question을 mappedBy에 전달해야 한다.
 	// cascade = CascadeType.REMOVE) => 답변이 달린 질문이 삭제되면 답변도 삭제 시킨다.
-	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) 
-    private List<Answer> answerList; 
+	
 }

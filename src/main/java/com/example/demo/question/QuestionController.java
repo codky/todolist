@@ -4,10 +4,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.answer.AnswerForm;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/question")
@@ -28,10 +35,27 @@ public class QuestionController {
 	}
 	
 	@GetMapping("detail/{id}")
-	public String detail(Model model, @PathVariable("id") Integer id) {
+	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
 		Question q = this.questionService.getQuestion(id);
 		model.addAttribute("question", q);
 		return "question_detail";
+	}
+	
+	@GetMapping("/create")
+	public String questionCreate(QuestionForm questionForm) {
+		return "question_form";
+	}
+	
+	@PostMapping("/create")
+	public String questionCreate(@Valid @ModelAttribute("questionForm") QuestionForm questionForm, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		
+		//TODO 질문을 등록한다
+		questionService.create(questionForm.getSubject(), questionForm.getContent());
+		
+		return "redirect:/question/list"; //질문 저장 후 질문목록으로 이동
 	}
 
 }
