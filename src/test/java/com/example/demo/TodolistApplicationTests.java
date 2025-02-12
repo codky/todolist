@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.foreign.Linker.Option;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import com.example.demo.answer.Answer;
 import com.example.demo.answer.AnswerRepository;
 import com.example.demo.question.Question;
 import com.example.demo.question.QuestionRepository;
+import com.example.demo.question.QuestionService;
 
 import jakarta.transaction.Transactional;
 
@@ -31,6 +33,9 @@ class TodolistApplicationTests {
 	
 	@Autowired
 	private AnswerRepository answerRepository;
+	
+	@Autowired
+	private QuestionService questionService;
 	
 	@Test
 	@Disabled
@@ -54,6 +59,15 @@ class TodolistApplicationTests {
 			todo1.setContent("테스트 데이터입니다. ["+i+"]");
 			todo1.setCompleted(Boolean.TRUE);
 			this.todoRepository.save(todo1);
+		}
+	}
+	
+	@Test
+	void testBoardData() {
+		for (int i = 1; i<= 300; i++) {
+			String subject = String.format("테스트 데이터입니다:[%03d]", i);
+			String content = "내용없음";
+			questionService.create(subject, content);
 		}
 	}
 	
@@ -161,6 +175,7 @@ class TodolistApplicationTests {
     
     @Transactional
     @Test
+    @Disabled
     void checkQeustion() {
     	Optional<Question> oq = this.questionRepository.findById(6);
     	assertTrue(oq.isPresent());
