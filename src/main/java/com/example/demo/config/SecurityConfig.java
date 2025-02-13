@@ -24,7 +24,8 @@ public class SecurityConfig {
 		
 		// 인증되지 않은 모든 페이지의 요청을 허락한다. 로그인하지 않더라도 모든페이지에 접근할 수 있다.
 		http
-			.csrf((csrf) -> csrf.disable()) // CSRF를 비활성화 (개발환경에서만)
+			//.csrf((csrf) -> csrf.disable()) // CSRF를 비활성화 (개발환경에서만)
+			.csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/**")))
 			.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 //			.headers((headers) -> headers

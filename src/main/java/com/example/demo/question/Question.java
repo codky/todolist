@@ -33,6 +33,8 @@ public class Question {
 	
 	private LocalDateTime createDate;
 	
+	private LocalDateTime modifyDate;
+	
 	@OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE) 
     private List<Answer> answerList; 
 	// Answer 객체들로 구성된 answerList를 Question 엔티티의 속성으로 추가하고 @OneToMany 애너테이션을 설정했다. 

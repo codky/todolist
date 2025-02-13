@@ -25,7 +25,9 @@ public class Answer {
     @Column(length = 4000) // 최대 4000자로 제한
     private String content;
 
-    private LocalDateTime createDate; 
+    private LocalDateTime createDate;
+    
+    private LocalDateTime modifyDate;
 
     @ManyToOne // 하나의 질문에 답변은 여러개 달릴 수 있다. 답변은 Many 질문은 One. N:1 -> 실제데이터베이스에서는 외래키(foreign key)관계가 생성된다.
     private Question question; 
