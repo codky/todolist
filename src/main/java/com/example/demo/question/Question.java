@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.demo.answer.Answer;
+import com.example.demo.user.SiteUser;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,5 +40,8 @@ public class Question {
 	// @OneToMany 애너테이션에 사용된 mappedBy는 참조 엔티티의 속성명을 정의한다. 
 	// 즉, Answer 엔티티에서 Question 엔티티를 참조한 속성인 question을 mappedBy에 전달해야 한다.
 	// cascade = CascadeType.REMOVE) => 답변이 달린 질문이 삭제되면 답변도 삭제 시킨다.
+	
+	@ManyToOne //사용자 한명이 여러 질문을 작성할 수 있으므로 @ManyToOne 어노테이션 적용
+	private SiteUser author;
 	
 }

@@ -19,6 +19,8 @@ import com.example.demo.answer.AnswerRepository;
 import com.example.demo.question.Question;
 import com.example.demo.question.QuestionRepository;
 import com.example.demo.question.QuestionService;
+import com.example.demo.todo.TodoEntity;
+import com.example.demo.todo.TodoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -67,7 +69,7 @@ class TodolistApplicationTests {
 		for (int i = 1; i<= 300; i++) {
 			String subject = String.format("테스트 데이터입니다:[%03d]", i);
 			String content = "내용없음";
-			questionService.create(subject, content);
+			questionService.create(subject, content, null);
 		}
 	}
 	

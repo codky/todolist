@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration // 스프링의 환경설정 파일임을 의미
@@ -26,6 +27,9 @@ public class SecurityConfig {
 			.csrf((csrf) -> csrf.disable()) // CSRF를 비활성화 (개발환경에서만)
 			.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 				.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+//			.headers((headers) -> headers
+//					.addHeaderWriter(new XFrameOptionsHeaderWriter(
+//							XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
 			.formLogin(formLogin -> formLogin // 로그인 설정
 					.loginPage("/user/login") // 로그인 페이지 URL
 					.usernameParameter("loginId") // username 대신 loginId 사용

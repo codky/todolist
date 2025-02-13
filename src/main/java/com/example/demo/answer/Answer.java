@@ -3,6 +3,7 @@ package com.example.demo.answer;
 import java.time.LocalDateTime;
 
 import com.example.demo.question.Question;
+import com.example.demo.user.SiteUser;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,4 +29,7 @@ public class Answer {
 
     @ManyToOne // 하나의 질문에 답변은 여러개 달릴 수 있다. 답변은 Many 질문은 One. N:1 -> 실제데이터베이스에서는 외래키(foreign key)관계가 생성된다.
     private Question question; 
+    
+    @ManyToOne
+	private SiteUser author;
 }

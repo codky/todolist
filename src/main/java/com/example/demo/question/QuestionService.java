@@ -11,7 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.DataNotFoundException;
+import com.example.demo.exception.DataNotFoundException;
+import com.example.demo.user.SiteUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,11 +42,12 @@ public class QuestionService {
 		}
 	}
 	
-	public void create(String subject, String content) {
+	public void create(String subject, String content, SiteUser user) {
 		Question question = new Question();
 		question.setSubject(subject);
 		question.setContent(content);
 		question.setCreateDate(LocalDateTime.now());
+		question.setAuthor(user);
 		questionRepository.save(question);
 	}
 
