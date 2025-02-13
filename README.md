@@ -1,6 +1,7 @@
 # Todolist 프로젝트 소개
 
-간편하게 회원가입 후 자신만의 할 일 리스트를 만들고 수정하거나 메모를 추가하거나 즐겨찾기하며 관리
+1. 간편하게 회원가입 후 자신만의 할 일 리스트를 만들고 관리
+2. 자유로운 게시판 기능
 
 <br>
 
@@ -25,37 +26,40 @@ src
 ┃ ┃ ┗ com
 ┃ ┃   ┗ example
 ┃ ┃     ┗ demo
-┃ ┃       ┣ answer
-┃ ┃       ┃ ┣ Answer.java                 // 답변 도메인 엔티티
-┃ ┃       ┃ ┣ AnswerController.java       // 답변 관련 컨트롤러
-┃ ┃       ┃ ┣ AnswerRepository.java       // 답변 관련 JPA 리포지토리
-┃ ┃       ┃ ┗ AnswerService.java          // 답변 관련 서비스
-┃ ┃       ┣ question
-┃ ┃       ┃ ┣ Question.java               // 질문 도메인 엔티티
-┃ ┃       ┃ ┣ QuestionController.java     // 질문 관련 컨트롤러
-┃ ┃       ┃ ┣ QuestionRepository.java     // 질문 관련 JPA 리포지토리
-┃ ┃       ┃ ┗ QuestionService.java        // 질문 관련 서비스
-┃ ┃       ┣ user
-┃ ┃       ┃ ┣ CustomOauth2UserService.java // OAuth2 사용자 서비스
-┃ ┃       ┃ ┣ CustomUserDetails.java       // 커스텀 사용자 세부 정보
-┃ ┃       ┃ ┣ GoogleUserDetails.java       // Google 사용자 세부 정보
-┃ ┃       ┃ ┣ KakaoUserDetails.java        // Kakao 사용자 세부 정보
-┃ ┃       ┃ ┣ NaverUserDetails.java        // Naver 사용자 세부 정보
-┃ ┃       ┃ ┣ OAuth2UserInfo.java          // OAuth2 사용자 정보 인터페이스
-┃ ┃       ┃ ┣ SiteUser.java                // 사용자 엔티티
-┃ ┃       ┃ ┣ UserController.java          // 사용자 관련 컨트롤러
-┃ ┃       ┃ ┣ UserCreateForm.java          // 사용자 생성 폼
-┃ ┃       ┃ ┣ UserRepository.java          // 사용자 JPA 리포지토리
-┃ ┃       ┃ ┣ UserRole.java                // 사용자 역할 Enum
-┃ ┃       ┃ ┣ UserSecurityService.java     // 사용자 인증 서비스
-┃ ┃       ┃ ┗ UserService.java             // 사용자 서비스
-┃ ┃       ┣ DataNotFoundException.java     // 데이터 없을 때의 예외 처리
-┃ ┃       ┣ SecurityConfig.java            // Spring Security 설정
-┃ ┃       ┣ TodoController.java            // Todo 관련 컨트롤러
-┃ ┃       ┣ TodoEntity.java                // Todo 엔티티
-┃ ┃       ┣ TodolistApplication.java       // 메인 애플리케이션
-┃ ┃       ┣ TodoRepository.java            // Todo JPA 리포지토리
-┃ ┃       ┗ TodoService.java               // Todo 서비스
+┃ ┃       ┣ answer                         //답변 도메인
+┃ ┃       ┃ ┣ Answer.java                 
+┃ ┃       ┃ ┣ AnswerController.java 
+┃ ┃       ┃ ┣ AnswerRepository.java 
+┃ ┃       ┃ ┗ AnswerService.java      
+┃ ┃       ┣ question                       //질문 도메인
+┃ ┃       ┃ ┣ Question.java 
+┃ ┃       ┃ ┣ QuestionController.java     
+┃ ┃       ┃ ┣ QuestionRepository.java     
+┃ ┃       ┃ ┗ QuestionService.java        
+┃ ┃       ┣ user                           //사용자 도메인
+┃ ┃       ┃ ┣ CustomOauth2UserService.java 
+┃ ┃       ┃ ┣ CustomUserDetails.java       
+┃ ┃       ┃ ┣ GoogleUserDetails.java      
+┃ ┃       ┃ ┣ KakaoUserDetails.java     
+┃ ┃       ┃ ┣ NaverUserDetails.java
+┃ ┃       ┃ ┣ OAuth2UserInfo.java
+┃ ┃       ┃ ┣ SiteUser.java
+┃ ┃       ┃ ┣ UserController.java
+┃ ┃       ┃ ┣ UserCreateForm.java
+┃ ┃       ┃ ┣ UserRepository.java
+┃ ┃       ┃ ┣ UserRole.java
+┃ ┃       ┃ ┣ UserSecurityService.java
+┃ ┃       ┃ ┗ UserService.java
+┃ ┃       ┣ exception                         //엑셉션 처리
+┃ ┃       ┣ ┗ DataNotFoundException.java
+┃ ┃       ┣ config                            //설정
+┃ ┃       ┣ ┗ SecurityConfig.java
+┃ ┃       ┣ todo                              //todo 도메인
+┃ ┃       ┣ ┗ TodoController.java
+┃ ┃       ┣ ┗ TodoEntity.java
+┃ ┃       ┣ ┗ TodoRepository.java
+┃ ┃       ┗ ┗ TodoService.java
+┃ ┃       ┣ TodolistApplication.java
 ┃ ┗ resources
 ┃   ┣ static                              // 정적 리소스 디렉토리
 ┃   ┃ ┣ bootstrap.min.css                 // 부트스트랩 CSS
