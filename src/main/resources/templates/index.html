@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>Hello, Todolist!</title>
+    <title>not like us.</title>
 </head>
 <body>
     <!-- 네이게이션바 -->
@@ -32,8 +32,9 @@
         </style>
 	</div>
 
-	<h3 sec:authorize="isAnonymous()"> 오늘의 할 일을 간편하게 관리해보세요! ☑️</h3>
-	<h3 sec:authorize="isAuthenticated()"> <div th:text="|${siteUser.nickname}님 안녕하세요, 오늘 할 일을 간편하게 관리해보세요! ☑️|"></h3> 
+	<h3 sec:authorize="isAnonymous()"> 	Not like us. Not like the past us. Your journey, redefined.
+</h3>
+	<h3 sec:authorize="isAuthenticated()"> <div th:text="|${siteUser.nickname}님 안녕하세요.|"></h3> 
 	 
 
 <!-- Bootstrap JS -->

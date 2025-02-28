@@ -23,7 +23,9 @@ import com.example.demo.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequestMapping("/question")
 @RequiredArgsConstructor
 @Controller
@@ -34,6 +36,7 @@ public class QuestionController {
 	
 	@GetMapping("/list")
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
+		log.info("page:{}, kew:{}", page, kw);
 		Page<Question> paging = questionService.getList(page, kw);
 		
 		model.addAttribute("paging", paging);

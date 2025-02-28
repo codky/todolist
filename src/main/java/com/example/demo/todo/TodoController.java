@@ -35,6 +35,7 @@ public class TodoController {
 	private final TodoService todoService;
 	private final UserService userService;
 	
+	@PreAuthorize("isAuthenticated()")
 	@RequestMapping("/todo/list")
 	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, Principal principal) {
 		SiteUser siteUser = this.userService.getUser(principal.getName()); // 현재 로그인 사용자

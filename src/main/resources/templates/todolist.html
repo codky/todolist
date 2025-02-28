@@ -71,19 +71,19 @@
 		
 	<form th:action="@{/todo/create}" method="post">
 	    <input name="content" placeholder="할 일을 추가해보세요!"/>
-	    <button class="btn btn-dark">등록</button>
+	    <button class="btn btn-dark">New Task</button>
 	</form>
 	<br>
 	 
     <table class="table" id="sortable">
         <thead class="table-light">
         <tr>
-			<th>번호</th>
-			<th>완료</th>
-            <th>할 일</th>
-			<th>등록일</th>
-			<th>수정/삭제</th>
-			<th>중요표시</th>
+			<th>No.</th>
+			<th>Complete</th>
+            <th>Task</th>
+			<th>Added On</th>
+			<th>Edit/Delete</th>
+			<th>Star</th>
 
         </tr>
         </thead>
@@ -126,7 +126,7 @@
 				        data-bs-toggle="modal" 
 				        data-bs-target="#reviseModal" 
 				        th:onclick="openModal([[${todoentity.id}]])">
-				    수정
+				    Edit
 				</button>
 				<!-- 수정 버튼 끝 -->
 				
@@ -135,21 +135,21 @@
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
-				        <h1 class="modal-title fs-5" id="reviseModalLabel">할 일 수정</h1>
+				        <h1 class="modal-title fs-5" id="reviseModalLabel">Task Edit</h1>
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
 				        <input id="reviseInput" class="form-control" placeholder="수정할 내용을 입력하세요" />
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				        <button type="button" class="btn btn-primary" onclick="reviseItem()">수정 완료</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+				        <button type="button" class="btn btn-primary" onclick="reviseItem()">save</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
 				<!-- 수정 모달 끝 -->
-				<button id="delete-btn" class="btn btn-dark" th:onclick="deleteItem([[${todoentity.id}]])">삭제</button>
+				<button id="delete-btn" class="btn btn-dark" th:onclick="deleteItem([[${todoentity.id}]])">Delete</button>
 			</td>
 			<td>
 			    <button id="prior-btn" class="btn btn-light" 

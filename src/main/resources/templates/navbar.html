@@ -1,6 +1,6 @@
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Todolist☑️</a>
+        <a class="navbar-brand" href="/">Not Like Us</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -8,25 +8,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- 왼쪽 메뉴 -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<!--
 				<li class="nav-item">
-				    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">오늘 할 일</a>
+				    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">Task</a>
 				</li>
+				-->
+				<!--
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">중요</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">important</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/todo/list}">예정</a>
-                </li>
+				-->
 				<li class="nav-item">
-	                <a class="nav-link" th:href="@{/question/list}">게시판</a>
+				    <a class="nav-link" th:href="@{/todo/list}">Task</a>
+				</li>
+				<li class="nav-item">
+	                <a class="nav-link" th:href="@{/question/list}">Discussion</a>
 	            </li>
             </ul>
 
             <!-- 오른쪽 메뉴 -->
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">LogIn</a>
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">LogOut</a>
                 </li>
 				<!--
                 <li class="nav-item">
