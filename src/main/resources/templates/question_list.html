@@ -3,7 +3,7 @@
 <div layout:fragment="content" class="container my-3">
 	<div class="row my-3">
 	    <div class="col-6">
-	        <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+	        <a th:href="@{/question/create}" class="btn btn-primary">글쓰기</a>
 	    </div>
 	    <div class="col-6">
 	        <div class="input-group">
@@ -13,17 +13,17 @@
 	    </div>
 	</div>
 
-	<table class="table">
-	    <thead class="table-dark">
+	<table class="table" id="sortable">
+	    <thead class="table-light">
 	        <tr>
-				<th>번호</th>
-	            <th style="width:50%">제목</th>
-				<th>글쓴이</th>
-	            <th>작성일시</th>
+				<th>No.</th>
+	            <th>Title</th>
+				<th>Nickname</th>
+	            <th>Added On</th>
 	        </tr>
 	    </thead>
 	    <tbody>
-	        <tr class="text-center" th:each="question, loop : ${paging}">
+	        <tr th:each="question, loop : ${paging}">
 				<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
 	            <td class="text-start">
 					<a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>

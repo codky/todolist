@@ -1,6 +1,6 @@
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Not Like Us</a>
+        <a class="navbar-brand" href="/">Task Manager</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -19,7 +19,7 @@
                 </li>
 				-->
 				<li class="nav-item">
-				    <a class="nav-link" th:href="@{/todo/list}">Task</a>
+				    <a class="nav-link" th:href="@{/todo/list}">My Task</a>
 				</li>
 				<li class="nav-item">
 	                <a class="nav-link" th:href="@{/question/list}">Discussion</a>
@@ -32,6 +32,9 @@
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">LogIn</a>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">LogOut</a>
                 </li>
+				<li>
+					<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">SignIn</a>
+				</li>
 				<!--
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>

@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-    <title>not like us.</title>
+    <title>Task Manager</title>
 </head>
 <body>
     <!-- 네이게이션바 -->
@@ -32,7 +32,9 @@
         </style>
 	</div>
 
-	<h3 sec:authorize="isAnonymous()"> 	Not like us. Not like the past us. Your journey, redefined.
+	<h3 sec:authorize="isAnonymous()"> 	Welcome to Task Manager
+		<a sec:authorize="isAnonymous()" th:href="@{/user/login}">LogIn</a>
+		<a sec:authorize="isAnonymous()" th:href="@{/user/signup}">SignIn</a>
 </h3>
 	<h3 sec:authorize="isAuthenticated()"> <div th:text="|${siteUser.nickname}님 안녕하세요.|"></h3> 
 	 
