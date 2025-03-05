@@ -49,7 +49,7 @@ public class TodoController {
 		model.addAttribute("paging", paging);
 		model.addAttribute("formattedDateTime", formattedDateTime);
 		model.addAttribute("dayOfWeekInKorea", dayOfWeekInKorea);
-		return "todoList";
+		return "todo_list";
 	}
 
     @RequestMapping("/")
