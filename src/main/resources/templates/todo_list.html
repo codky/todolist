@@ -228,7 +228,13 @@ function deleteItem(id){
 
 function openModal(id) {
     value = id; // 수정할 항목 ID 저장
-    const currentContent = document.querySelector(`a[th:href='|/todo/detail/${id}|']`).textContent; // 현재 내용 가져오기
+	
+	//th:href 가 아니라 최종 렌더링 된 href 속성 기준으로 선택
+    const anchor = document.querySelector(`a[href='/todo/detail/${id}']`);
+	
+	//혹시 해당 a태그가 없을 경우를 대비해 체크
+	const currentContent = anchor ? anchor.textContent : "";
+	
     document.getElementById("reviseInput").value = currentContent; // 모달의 input에 현재 내용 표시
 }
 

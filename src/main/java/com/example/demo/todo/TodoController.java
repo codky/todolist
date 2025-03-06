@@ -88,24 +88,24 @@ public class TodoController {
     
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/todo/delete/{id}")
-    public String todoDelete(@PathVariable("id") Integer id, Principal principal) {
+    public ResponseEntity<?> todoDelete(@PathVariable("id") Integer id, Principal principal) {
     	
     	SiteUser siteUser = this.userService.getUser(principal.getName());
     	TodoEntity todoItem = this.todoService.getTodoItemForUser(id, siteUser);
     	this.todoService.delete(todoItem.getId(), siteUser);
     	
-    	return "redirect:/todo/list";
+    	return ResponseEntity.ok().build();  // 200 OK
     }
     
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/todo/update/{id}")
-    public String todoUpdate(@RequestBody String content, @PathVariable("id") Integer id, Principal principal) {
+    public ResponseEntity<?> todoUpdate(@RequestBody String content, @PathVariable("id") Integer id, Principal principal) {
     	
     	SiteUser siteUser = this.userService.getUser(principal.getName());
     	TodoEntity todoItem = this.todoService.getTodoItemForUser(id, siteUser);
     	this.todoService.update(todoItem.getId(), content, siteUser);
     	
-    	return "redirect:/todo/list";
+    	return ResponseEntity.ok().build();  // 200 OK
     }
     
     @PreAuthorize("isAuthenticated()")
@@ -121,13 +121,14 @@ public class TodoController {
     
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/todo/detail/memo/{id}")
-    public String memoUpdate(@RequestBody String memo, @PathVariable("id") Integer id, Principal principal) {
+    public ResponseEntity<?> memoUpdate(@RequestBody String memo, @PathVariable("id") Integer id, Principal principal) {
     
     	SiteUser siteUser = this.userService.getUser(principal.getName());
     	TodoEntity todoItem = this.todoService.getTodoItemForUser(id, siteUser);
     	this.todoService.updateMemo(todoItem.getId(), memo, siteUser);
     	
-    	return "redirect:/todo/list";
+    	// 200 OK
+        return ResponseEntity.ok().build();
     }
     
     @PreAuthorize("isAuthenticated()")
