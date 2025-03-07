@@ -128,4 +128,13 @@ public class TodoService {
         todoItem.setUpdateDate(LocalDate.now()); // 수정 날짜 갱신
         this.todoRepository.save(todoItem); // 저장
     }
+    
+    public TodoEntity save(TodoEntity todo) {
+        return todoRepository.save(todo);
+    }
+    
+    public List<TodoEntity> getAllTodosForUser(SiteUser user) {
+        // 페이지 처리 없이 해당 사용자의 모든 Todo 반환
+        return todoRepository.findByAuthor(user);
+    }
 }

@@ -8,305 +8,227 @@
     <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
     <!-- sbb CSS -->
     <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<!--
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready(function () {
-		    function initializeSortable() {
-		        jQuery("table > tbody").sortable({
-		            start: function (event, ui) {
-		                ui.item.addClass("selected");
-		            },
-		            stop: function (event, ui) {
-		                ui.item.removeClass("selected");
-		            },
-		            update: function (event, ui) {
-		                // 순서 변경 시 호출
-		                const updatedOrder = [];
-		                jQuery("table > tbody > tr").each(function (index, element) {
-		                    const id = jQuery(element).data("id"); // 각 행의 데이터 ID
-		                    updatedOrder.push({ id: id, orderIndex: index });
-		                });
-
-		                // 서버로 업데이트 요청
-		                $.ajax({
-		                    type: "POST",
-		                    url: "/todo/updateOrder", // 순서 업데이트 API
-		                    contentType: "application/json",
-		                    data: JSON.stringify(updatedOrder), // 변경된 순서 전송
-		                    success: function () {
-		                        console.log("순서가 업데이트되었습니다!");
-		                    },
-		                    error: function (error) {
-		                        console.error("순서 업데이트 중 오류 발생", error);
-		                    },
-		                });
-		            },
-		        });
-		    }
-
-		    initializeSortable();
-		});
-	</script>
--->
     <title>Task Manager</title>
 </head>
 <body>
     <!-- 네이게이션바 -->
     <nav th:replace="~{navbar :: navbarFragment}"></nav>
+
     <div class="container my-3">
         <style>
-			.completed-task {
-			    text-decoration: line-through;
-			    color: gray;
-			}
-			
+            .completed-task {
+                text-decoration: line-through;
+                color: gray;
+            }
         </style>
-		
 
-	<!--<h3>오늘 할 일☑️</h3>--> 
-	<h3 th:text="|${formattedDateTime} ${dayOfWeekInKorea}|"></h3>
-	<br>
-		
-	<form th:action="@{/todo/create}" method="post">
-	    <input name="content" placeholder="할 일을 추가해보세요!"/>
-	    <button class="btn btn-dark">New Task</button>
-	</form>
-	<br>
-	 
-    <table class="table" id="sortable">
-        <thead class="table-light">
-        <tr>
-			<th>No.</th>
-			<th>Complete</th>
-            <th>Task</th>
-			<th>Added On</th>
-			<th>Edit/Delete</th>
-			<th>Star</th>
+        <!-- 날짜 표시 -->
+        <h3 th:text="|${formattedDateTime} ${dayOfWeekInKorea}|"></h3>
+        <br>
+        
+        <!-- 할 일 추가 폼 -->
+        <form th:action="@{/todo/create}" method="post">
+            <input name="content" placeholder="할 일을 추가해보세요!"/>
+            <button class="btn btn-dark">New Task</button>
+        </form>
+        <br>
+        
+        <!-- 할 일 목록 테이블 -->
+        <table class="table" id="sortable">
+            <thead class="table-light">
+                <tr>
+                    <th>No.</th>
+                    <th>Complete</th>
+                    <th>Task</th>
+                    <th>Added On</th>
+                    <th>Edit/Delete</th>
+                    <th>Star</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="todoentity, loop : ${paging}">
+                    <!-- 번호 -->
+                    <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+                    
+                    <!-- 완료 스위치 -->
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch"
+                                   th:checked="${todoentity.completed}"
+                                   th:id="'switch-' + ${todoentity.id}"
+                                   th:onchange="completeItem([[${todoentity.id}]], this.checked)">
+                        </div>
+                    </td>
+                    
+                    <!-- 할 일 -->
+                    <td>
+                        <a th:href="@{|/todo/detail/${todoentity.id}|}"
+                           th:text="${todoentity.content}"
+                           th:classappend="${todoentity.completed} ? 'completed-task' : ''">
+                        </a>
+                        <span class="text-danger small ms-2"
+                              th:if="${todoentity.memo != null and #strings.length(todoentity.memo) > 0}"
+                              th:text="'memo'">
+                        </span>
+                    </td>
+                    
+                    <!-- 등록일 -->
+                    <td th:text="${todoentity.createDate}"></td>
+                    
+                    <!-- Edit/Delete -->
+                    <td>
+                        <button type="button" class="btn btn-dark"
+                                data-bs-toggle="modal"
+                                data-bs-target="#reviseModal"
+                                th:onclick="openModal([[${todoentity.id}]])">
+                            Edit
+                        </button>
+                        <!-- 수정 모달 -->
+                        <div class="modal fade" id="reviseModal" tabindex="-1" aria-labelledby="reviseModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="reviseModalLabel">Task Edit</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input id="reviseInput" class="form-control" placeholder="수정할 내용을 입력하세요" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
+                                        <button type="button" class="btn btn-primary" onclick="reviseItem()">save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 수정 모달 끝 -->
 
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="todoentity, loop : ${paging}">
-            <!--<td th:text="${todoentity.id}"></td>-->
-			<!-- 번호 -->
-			<td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-			<!-- 번호 끝 -->
-			<!-- 완료 스위치 -->
-			<td>
-				<!--<button id="complete-btn" th:onclick="completeItem([[${todoentity.id}]])">완료</button>-->
-				<div class="form-check form-switch">
-				    <input class="form-check-input" type="checkbox" role="switch" 
-				           th:checked="${todoentity.completed}" 
-				           th:id="'switch-' + ${todoentity.id}" 
-				           th:onchange="completeItem([[${todoentity.id}]], this.checked)">
-				</div>
-				
-			</td>
-			<!-- 완료 스위치 끝 -->
-			<!-- 할 일 -->
-            <td>
-				<a th:href="@{|/todo/detail/${todoentity.id}|}" 
-				th:text="${todoentity.content}"
-				th:classappend="${todoentity.completed} ? 'completed-task' : ''"></a>
-				<span class="text-danger small ms-2"
-				      th:if="${todoentity.memo != null and #strings.length(todoentity.memo) > 0}"
-				      th:text="'memo'">
-				</span>
-			</td> 
-			<!-- 할 일 끝 -->
-			<!-- 등록일 -->
-			<td th:text="${todoentity.createDate}"></td>
-			<!-- 등록일 끝 -->
-			
-			<td>
-				<!-- 수정 버튼 -->
-				<button type="button" class="btn btn-dark" 
-				        data-bs-toggle="modal" 
-				        data-bs-target="#reviseModal" 
-				        th:onclick="openModal([[${todoentity.id}]])">
-				    Edit
-				</button>
-				<!-- 수정 버튼 끝 -->
-				
-				<!-- 수정 모달 -->
-				<div class="modal fade" id="reviseModal" tabindex="-1" aria-labelledby="reviseModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h1 class="modal-title fs-5" id="reviseModalLabel">Task Edit</h1>
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body">
-				        <input id="reviseInput" class="form-control" placeholder="수정할 내용을 입력하세요" />
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">close</button>
-				        <button type="button" class="btn btn-primary" onclick="reviseItem()">save</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				<!-- 수정 모달 끝 -->
-				<button id="delete-btn" class="btn btn-dark" th:onclick="deleteItem([[${todoentity.id}]])">Delete</button>
-			</td>
-			<td>
-			    <button id="prior-btn" class="btn btn-light" 
-			            th:onclick="togglePriority([[${todoentity.id}]])"
-			            th:classappend="${todoentity.priority} ? 'btn-danger' : 'btn-light'">
-			        <span th:text="${todoentity.priority} ? '⭐' : ' '"></span>
-					<!--<span th:text="${todoentity.priority} ? '📌' : ''"></span>-->
-			    </button>
-			</td>
-        </tr>
-        </tbody>
-    </table>
-	
-	<!-- 페이징처리 시작 -->
-    <div th:if="${!paging.isEmpty()}">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
-                <a class="page-link"
-                    th:href="@{|?page=${paging.number-1}|}">
-                    <span>이전</span>
-                </a>
-            </li>
-            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
-				th:if="${page >= paging.number-5 and page <= paging.number+5}"
-                th:classappend="${page == paging.number} ? 'active'" 
-                class="page-item">
-                <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
-            </li>
-            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
-                <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
-                    <span>다음</span>
-                </a>
-            </li>
-        </ul>
+                        <button id="delete-btn" class="btn btn-dark" th:onclick="deleteItem([[${todoentity.id}]])">Delete</button>
+                    </td>
+                    
+                    <!-- Star 버튼 -->
+                    <td>
+                        <button id="prior-btn" class="btn btn-light"
+                                th:onclick="togglePriority([[${todoentity.id}]])"
+                                th:classappend="${todoentity.priority} ? 'btn-danger' : 'btn-light'">
+                            <span th:text="${todoentity.priority} ? '⭐' : ' '"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- 페이징처리 시작 -->
+        <div th:if="${!paging.isEmpty()}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number-1}|}">
+                        <span>이전</span>
+                    </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                    th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                    th:classappend="${page == paging.number} ? 'active'"
+                    class="page-item">
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>
+                </li>
+                <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                    <a class="page-link" th:href="@{|?page=${paging.number+1}|}">
+                        <span>다음</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 페이징처리 끝 -->
     </div>
-    <!-- 페이징처리 끝 -->
-	</div>
-	<!--
-	<div class="modal">
-	    <div class="modal_content">
-	        <input id="revise" placeholder="내용을 수정해주세요"/>
-	        <button type="submit" id="completeBtn" onclick="reviseItem()">완료</button>
-	    </div>
-	</div>
-	-->
-	
 
-<!-- Bootstrap JS -->
-<script th:src="@{/bootstrap.min.js}"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script>
+    <!-- Bootstrap JS -->
+    <script th:src="@{/bootstrap.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-let value = "";
+    <!-- 기존 스크립트: Todo 관련 함수들 -->
+    <script>
+    let value = "";
 
-function deleteItem(id){
-	if(confirm('정말 삭제하시겠습니까?')) {
-		console.log(id)
-		    const url = "/todo/delete/"+id
-		    $.ajax({
-		        type:'delete',
-		        url:url,
-		        contentType:'application/json; charset=utf-8'
-		        }).done(function() {
-		        //alert('할 일이 삭제되었습니다.');
-		        window.location.href = '/todo/list';
-		        }).fail(function (error){
-		        alert(JSON.stringify(error));
-		    });
-	} else {
-		//  삭제 취소
-		console.log('삭제 취소');
-	}
-    
-}
+    function deleteItem(id){
+        if(confirm('정말 삭제하시겠습니까?')) {
+            const url = "/todo/delete/"+id;
+            $.ajax({
+                type:'delete',
+                url:url,
+                contentType:'application/json; charset=utf-8'
+            }).done(function() {
+                window.location.href = '/todo/list';
+            }).fail(function (error){
+                alert(JSON.stringify(error));
+            });
+        }
+    }
 
+    function openModal(id) {
+        value = id;
+        const anchor = document.querySelector(`a[href='/todo/detail/${id}']`);
+        const currentContent = anchor ? anchor.textContent : "";
+        document.getElementById("reviseInput").value = currentContent;
+    }
 
-function openModal(id) {
-    value = id; // 수정할 항목 ID 저장
-	
-	//th:href 가 아니라 최종 렌더링 된 href 속성 기준으로 선택
-    const anchor = document.querySelector(`a[href='/todo/detail/${id}']`);
-	
-	//혹시 해당 a태그가 없을 경우를 대비해 체크
-	const currentContent = anchor ? anchor.textContent : "";
-	
-    document.getElementById("reviseInput").value = currentContent; // 모달의 input에 현재 내용 표시
-}
+    function reviseItem() {
+        const id = value;
+        const updateContent = document.getElementById("reviseInput").value;
 
-function reviseItem() {
-    const id = value; // 저장된 ID 가져오기
-    const updateContent = document.getElementById("reviseInput").value; // 입력한 수정 내용 가져오기
+        if (confirm('정말 수정하시겠습니까?')) {
+            const url = "/todo/update/" + id;
+            $.ajax({
+                type: 'put',
+                url: url,
+                contentType: 'application/json; charset=utf-8',
+                data: updateContent,
+            }).done(function() {
+                window.location.href = '/todo/list';
+            }).fail(function(error) {
+                alert(JSON.stringify(error));
+            });
+            $('#reviseModal').modal('hide');
+        }
+    }
 
-    if (confirm('정말 수정하시겠습니까?')) {
-        const url = "/todo/update/" + id;
+    function completeItem(id, isChecked) {
+        const url = `/todo/complete/${id}`;
+        if(isChecked) {
+            $.ajax({
+                type:'put',
+                url:url,
+                contentType:'application/json; charset=utf-8'
+            }).done(function() {
+                window.location.href = '/todo/list';
+            }).fail(function (error){
+                alert(JSON.stringify(error));
+            });
+        } else {
+            $.ajax({
+                type:'put',
+                url:url,
+                contentType:'application/json; charset=utf-8'
+            }).done(function() {
+                window.location.href = '/todo/list';
+            }).fail(function (error){
+                alert(JSON.stringify(error));
+            });
+        }
+    }
+
+    function togglePriority(id) {
+        const url = `/todo/priority/${id}`;
         $.ajax({
             type: 'put',
             url: url,
-            contentType: 'application/json; charset=utf-8',
-            data: updateContent,
+            contentType:'application/json; charset=utf-8'
         }).done(function() {
-            //alert('할 일이 수정되었습니다.');
-            window.location.href = '/todo/list';
+            window.location.reload();
         }).fail(function(error) {
             alert(JSON.stringify(error));
         });
-
-        // 모달 닫기
-        $('#reviseModal').modal('hide');
-    } else {
-        console.log('수정 취소');
     }
-}
-
-function completeItem(id, isChecked) {
-    console.log(`Item ID : ${id}, Checked: ${isChecked}`);
-    const url = `/todo/complete/${id}`;
-	
-	if(isChecked) {
-		$.ajax({
-	        type:'put',
-	        url:url,
-	        contentType:'application/json; charset=utf-8'
-	    }).done(function() {
-	    	//alert('할 일을 완료했습니다!');
-	        window.location.href = '/todo/list';
-	    }).fail(function (error){
-	        alert(JSON.stringify(error));
-        });	
-	} else {
-		$.ajax({
-		    type:'put',
-		    url:url,
-		    contentType:'application/json; charset=utf-8'
-		}).done(function() {
-			//alert('할 일의 완료를 취소했습니다.');
-		    window.location.href = '/todo/list';
-		}).fail(function (error){
-		    alert(JSON.stringify(error));
-		});
-		
-	}
-     
-}
-
-function togglePriority(id) {
-    const url = `/todo/priority/${id}`;
-    $.ajax({
-        type: 'put',
-        url: url,
-        contentType: 'application/json; charset=utf-8',
-    }).done(function() {
-        // 요청 성공 시 페이지 새로고침
-        window.location.reload();
-    }).fail(function(error) {
-        alert(JSON.stringify(error));
-    });
-}
-
-</script>
+    </script>
+</body>
 </html>

@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -150,5 +154,4 @@ public class TodoController {
         this.todoService.togglePriority(todoItem); // 우선순위 토글
         return ResponseEntity.ok().build();
     }
-
 }

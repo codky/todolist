@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    
+	<!-- FullCalendar 6.1.15 (index.global) -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
+
+    <title>Task Manager</title>
+</head>
+<body>
+	
+	<style>
+	  /* 달력 컨테이너 스타일 */
+	  #calendar {
+	      max-width: 900px; /* 원하는 최대 너비 */
+	      margin: 0 auto;   /* 가운데 정렬 */
+	      padding: 20px;    /* 내부 여백 */
+	  }
+	  
+	  /* calendar.html */
+
+	  .fc-col-header-cell-cushion, .fc-daygrid-day-number {
+	      text-decoration: none;
+	  }
+
+	  .fc-scrollgrid-sync-inner > .fc-col-header-cell-cushion,
+	  .fc-day-mon .fc-daygrid-day-number,
+	  .fc-day-tue .fc-daygrid-day-number,
+	  .fc-day-wed .fc-daygrid-day-number,
+	  .fc-day-thu .fc-daygrid-day-number,
+	  .fc-day-fri .fc-daygrid-day-number {
+	      color: black;
+	  }
+
+	  .fc-day-sun .fc-col-header-cell-cushion,
+	  .fc-day-sun a{
+	      color : red;
+	  }
+
+	  .fc-day-sat .fc-col-header-cell-cushion,
+	  .fc-day-sat a {
+	      color : blue;
+	  }
+	</style>
+	
+    <!-- 네이게이션바 -->
+    <nav th:replace="~{navbar :: navbarFragment}"></nav>
+
+	<div id="calendar"></div>
+	
+    <!-- (4) 달력 초기화 스크립트 -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'ko', // 한글 모드
+            editable: true, // 드래그 이동 가능
+            selectable: true, // 날짜 클릭 시 새 Task 추가 가능
+            events: '/api/todos', // 백엔드에서 일정(할 일) 불러오기
+            eventClick: function(info) {
+                alert('Task: ' + info.event.title);
+                // 상세 페이지로 이동
+                // window.location.href = "/todo/detail/" + info.event.id;
+            },
+            select: function(info) {
+                var title = prompt("새로운 Task 제목을 입력하세요:");
+                if (title) {
+                    fetch('/api/todos', {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            title: title,
+                            start: info.startStr,
+                            end: info.endStr
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        calendar.refetchEvents();
+                    });
+                }
+            }
+        });
+        calendar.render();
+    });
+    </script>
+</body>
+</html>
